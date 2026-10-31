@@ -1,5 +1,4 @@
 import { offlineSafeImageSrc, withAssetCacheBust } from "../stores/offlineMode";
-import { accountAvatar } from "./generatedAvatar";
 
 export interface AccountAvatarInput {
   /** Streamer mode: never show the real face, whatever else is true. */
@@ -21,14 +20,13 @@ export interface AccountAvatarInput {
 /**
  * The single rule for what an account tile shows.
  *
- * A generated avatar stands in for a real one in streamer mode, and for a missing
- * one anywhere — but never for one that is merely still loading. Swapping a
- * generated face in mid-refresh and back out again would make every avatar refresh
- * look like a bug.
+ * Real profile images are shown when available. Otherwise use the platform
+ * artwork passed as `fallback`, including streamer mode, so no generated colour
+ * tile is mistaken for an account photo.
  */
 export function accountAvatarSrc(input: AccountAvatarInput): string {
   if (input.streamer) {
-    return accountAvatar(input.salt, input.platformKey, input.accountKey) || input.fallback;
+    return input.fallback;
   }
   if (input.pending) {
     return input.fallback;
@@ -41,5 +39,5 @@ export function accountAvatarSrc(input: AccountAvatarInput): string {
   if (real) {
     return real;
   }
-  return accountAvatar(input.salt, input.platformKey, input.accountKey) || input.fallback;
+  return input.fallback;
 }

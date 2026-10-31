@@ -53,7 +53,7 @@
   import "../styles/miniprofile.scss";
   import "../styles/platformAccountsShared.scss";
 
-  const PROFILE_PLACEHOLDER = "/img/BasicDefault.webp";
+  const PROFILE_PLACEHOLDER = "/img/platform/Steam.svg";
   const SHORTCUT_ICON_FALLBACK = "/img/icons/file.svg";
 
 

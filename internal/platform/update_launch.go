@@ -207,7 +207,7 @@ func runSilentUpdateCheck(ctx context.Context, app *application.App) {
 		rel, err := app.Updater.Check(checkCtx)
 		cancel()
 		if err == nil {
-			if rel != nil {
+			if rel != nil && updatecheck.IsUpdateAvailable(appVersionFromBuildConfig(), rel.Version) {
 				// Notify only. CheckAndInstall would open the updater window
 				// and start downloading straight away — Wails has no "ask
 				// first" mode, so consent comes from the in-app update bar,
@@ -292,7 +292,7 @@ func tryWailsUpdateCheck(ctx context.Context) (string, bool) {
 		}
 		return "", false
 	}
-	if rel == nil {
+	if rel == nil || !updatecheck.IsUpdateAvailable(appVersionFromBuildConfig(), rel.Version) {
 		return "up-to-date", true
 	}
 	emitAppUpdateAvailable(wailsReleaseMessage(rel))

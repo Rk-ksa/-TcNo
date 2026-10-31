@@ -1,4 +1,6 @@
 
+> **Unofficial modified copy maintained by Rk-ksa.** Based on [TcNo Account Switcher](https://github.com/TCNOco/TcNo-Acc-Switcher); this repository is not affiliated with or endorsed by TCNOco or the platform owners. It retains the upstream GNU GPLv3 license and third-party notices: see [LICENSE](LICENSE) and [OPEN_SOURCE_LICENSES.txt](OPEN_SOURCE_LICENSES.txt).
+
 <p align="center">
   <a href="https://tcno.co/">
     <img src="/other/img/Banner.png"></a>

@@ -15,6 +15,7 @@
   } from "../../bindings/TcNo-Acc-Switcher/internal/basic/models.js";
   import { LaunchPlatform } from "../../bindings/TcNo-Acc-Switcher/internal/platform/platformservice.js";
   import { formatToastWithError } from "../lib/formatWailsError";
+  import { platformIconSrc } from "../lib/platformIcon";
   import { offerRestartIfNeedsAdmin, isNeedsAdminError } from "../lib/adminFlow";
   import { openPrompt } from "../stores/modal";
   import "../styles/platformAccountsShared.scss";
@@ -36,7 +37,7 @@
 
   $: adapter = {
     platformKey: name,
-    profileFallback: PROFILE_FALLBACK,
+    profileFallback: platformIconSrc(name) || PROFILE_FALLBACK,
 
     id: (a: BasicRow) => a.uniqueId,
     name: (a: BasicRow) => a.displayName ?? "",

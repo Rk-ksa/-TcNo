@@ -78,14 +78,11 @@
 }
 
 .acc_list {
-  gap: 4px;
+  gap: 12px;
   display: grid;
   position: relative;
-  grid-template-columns: repeat(auto-fill, 100px);
-  // Tiles keep their fixed width; the width left over once auto-fill has packed
-  // the row is spread between them instead of collecting as dead space on the
-  // right. gap stays the floor, so tiles never touch.
-  justify-content: space-between;
+  grid-template-columns: repeat(auto-fill, 112px);
+  justify-content: start;
   grid-auto-rows: minmax(min-content, max-content);
   width: 100%;
   height: 100%;
@@ -165,8 +162,8 @@
 }
 
 .placeHolderAcc {
-  width: 100px;
-  min-height: 135px;
+  width: 112px;
+  min-height: 145px;
   border: 2px dashed var(--accent-border-strong);
   background: var(--code-background);
 }
@@ -176,9 +173,9 @@
 }
 
 .acc_list_item--skeleton {
-  width: 100px;
-  min-height: 135px;
-  padding: 0.35rem 0.25rem 0.5rem;
+  width: 112px;
+  min-height: 145px;
+  padding: 0.55rem 0.45rem 0.6rem;
   border: 0.1em solid var(--accent-border-strong);
   background: var(--code-background);
   display: flex;
@@ -295,17 +292,21 @@ label.acc {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
-  min-width: 100px;
-  max-width: 100px;
-  min-height: 135px;
+  box-sizing: border-box;
+  width: 112px;
+  min-width: 112px;
+  max-width: 112px;
+  min-height: 145px;
   // Stretched by .acc_list_item_inner to the row's height; a percentage here
   // would resolve against a wrapper that has none.
   height: auto;
-  margin: -0.1em;
-  padding: 0.5em;
-  border-width: 0.1em;
+  margin: 0;
+  padding: 0.55em 0.45em 0.6em;
+  border-width: 1px;
   border-style: solid;
-  border-color: transparent;
+  border-color: rgba(var(--accentInt), 0.16);
+  border-radius: 10px;
+  background: rgba(var(--accentInt), 0.045);
   color: var(--whiteSecondary);
   text-align: center;
   cursor: pointer;
@@ -337,18 +338,27 @@ label.acc {
   > img {
     -webkit-user-drag: none;
     display: inline-block;
-    width: 6em;
-    height: 6em;
-    margin-bottom: 0.5em;
-    border: 2px solid transparent;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 0.45em;
+    border: 1px solid rgba(var(--accentInt), 0.22);
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  > img.account-avatar-placeholder {
+    box-sizing: border-box;
+    padding: 10px;
+    background: rgba(var(--accentInt), 0.08);
+    object-fit: contain;
   }
 
   .steam-acc-avatar-wrap {
     position: relative;
     display: inline-block;
-    width: 6em;
-    height: 6em;
-    margin-bottom: 0.75em;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 0.5em;
     vertical-align: top;
   }
 
@@ -359,7 +369,8 @@ label.acc {
     width: 100%;
     height: 100%;
     margin: 0;
-    border: 2px solid transparent;
+    border: 1px solid rgba(var(--accentInt), 0.22);
+    border-radius: 8px;
     object-fit: cover;
   }
 
@@ -406,8 +417,9 @@ label.acc {
   }
 
   h6 {
-    max-width: 9em;
-    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 0.1em 0 0;
     overflow: hidden;
     font-size: 1em;
     text-overflow: ellipsis;
@@ -415,7 +427,8 @@ label.acc {
   }
 
   p {
-    max-width: 9em;
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     overflow: hidden;
     color: var(--text-muted-gray);
@@ -461,7 +474,7 @@ input.acc:checked + label.acc {
 
 label.acc.currentAcc {
   border-color: var(--shortcut-active-border, var(--green));
-  border-style: dashed;
+  border-style: solid;
 }
 
 .acc_list_actionbar {

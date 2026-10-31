@@ -5,7 +5,7 @@ vi.mock("../../bindings/TcNo-Acc-Switcher/internal/platform/platformservice.js",
   GetStartup: vi.fn(),
 }));
 
-import { previousPage, route } from "./nav";
+import { navigateBackLikeButton, previousPage, route } from "./nav";
 
 /**
  * These guard the Svelte 5 remount loop: pages set their own route on mount,
@@ -103,5 +103,23 @@ describe("previousPage store", () => {
 
     previousPage.set(null);
     expect(get(previousPage)).toBeNull();
+  });
+
+  it("uses the app route fallback instead of unrelated WebView history", () => {
+    const back = vi.fn();
+    const replaceState = vi.fn();
+    vi.stubGlobal("window", {
+      location: { hash: "#/platform/Steam" },
+      history: { length: 3, state: null, back, replaceState },
+    });
+    route.set({ page: "platform", platformName: "Steam" });
+    previousPage.set({ page: "home" });
+
+    navigateBackLikeButton();
+
+    expect(back).not.toHaveBeenCalled();
+    expect(replaceState).toHaveBeenCalled();
+    expect(get(route)).toEqual({ page: "home" });
+    vi.unstubAllGlobals();
   });
 });

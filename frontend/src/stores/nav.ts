@@ -222,10 +222,9 @@ export function navigateBackLikeButton(): void {
     history.back();
     return;
   }
-  if (typeof window !== "undefined" && window.history.length > 1) {
-    history.back();
-    return;
-  }
+  // Only navigate through entries owned by this app. The WebView's global
+  // history can include entries outside the app and is not a reliable signal
+  // that there is an internal route to return to.
   const prev = get(previousPage);
   replaceCurrentHistoryRoute(prev ?? { page: "home" });
 }

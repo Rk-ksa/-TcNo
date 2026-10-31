@@ -205,7 +205,7 @@
 	 */
 	let switcherProfiles: Record<string, SteamGuardAccountSummary> = {};
 
-	const PROFILE_FALLBACK = "/img/BasicDefault.webp";
+	const PROFILE_FALLBACK = "/img/platform/Steam.svg";
 
 	/** Minimal row for the shared avatar component; the modal never shows mini-profiles. */
 	function avatarRow(summary: SteamGuardAccountSummary): SteamAccountRow {

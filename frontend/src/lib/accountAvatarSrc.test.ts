@@ -1,13 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { accountAvatarSrc, type AccountAvatarInput } from "./accountAvatarSrc";
-
-// jsdom has no canvas, so the generator returns "" and the resolver falls through
-// to the platform placeholder: a missing canvas must never leave an account tile
-// with a broken image.
-vi.mock("./generatedAvatar", () => ({
-  accountAvatar: (salt: string, platform: string, key: string) =>
-    key ? `generated:${salt}:${platform}:${key}` : "",
-}));
 
 const base: AccountAvatarInput = {
   streamer: false,
@@ -18,7 +10,7 @@ const base: AccountAvatarInput = {
   pending: false,
   epoch: 0,
   offline: false,
-  fallback: "/img/BasicDefault.webp",
+  fallback: "/img/platform/Steam.svg",
 };
 
 describe("accountAvatarSrc", () => {
@@ -26,30 +18,29 @@ describe("accountAvatarSrc", () => {
     expect(accountAvatarSrc(base)).toContain("https://avatars.example/real.jpg");
   });
 
-  it("never shows the real avatar in streamer mode", () => {
+  it("uses the platform icon instead of the real avatar in streamer mode", () => {
     const src = accountAvatarSrc({ ...base, streamer: true });
-    expect(src).toBe("generated:salt:Steam:76561198000000001");
+    expect(src).toBe("/img/platform/Steam.svg");
   });
 
-  it("generates a stand-in for an account that has no avatar at all", () => {
-    expect(accountAvatarSrc({ ...base, imageUrl: "" })).toBe("generated:salt:Steam:76561198000000001");
+  it("uses the platform icon when the account has no avatar", () => {
+    expect(accountAvatarSrc({ ...base, imageUrl: "" })).toBe("/img/platform/Steam.svg");
   });
 
   it("leaves an in-flight avatar on the platform placeholder", () => {
-    // Swapping a generated face in mid-refresh and back out again reads as a bug.
-    expect(accountAvatarSrc({ ...base, imageUrl: "", pending: true })).toBe("/img/BasicDefault.webp");
+    expect(accountAvatarSrc({ ...base, imageUrl: "", pending: true })).toBe("/img/platform/Steam.svg");
   });
 
-  it("generates rather than falling back when offline blocks a remote avatar", () => {
-    expect(accountAvatarSrc({ ...base, offline: true })).toBe("generated:salt:Steam:76561198000000001");
+  it("uses the platform icon when offline blocks a remote avatar", () => {
+    expect(accountAvatarSrc({ ...base, offline: true })).toBe("/img/platform/Steam.svg");
   });
 
-  it("falls back to the placeholder when generation is unavailable", () => {
-    expect(accountAvatarSrc({ ...base, imageUrl: "", accountKey: "" })).toBe("/img/BasicDefault.webp");
+  it("uses the platform icon when account identity data is missing", () => {
+    expect(accountAvatarSrc({ ...base, imageUrl: "", accountKey: "" })).toBe("/img/platform/Steam.svg");
   });
 
-  it("still censors when generation is unavailable", () => {
+  it("keeps using the platform icon in streamer mode without an account key", () => {
     const src = accountAvatarSrc({ ...base, streamer: true, accountKey: "" });
-    expect(src).toBe("/img/BasicDefault.webp");
+    expect(src).toBe("/img/platform/Steam.svg");
   });
 });

@@ -48,7 +48,7 @@
   import "../styles/platformAccountsShared.scss";
   import "../styles/steamGames.scss";
 
-  const PROFILE_PLACEHOLDER = "/img/BasicDefault.webp";
+  const PROFILE_PLACEHOLDER = "/img/platform/Steam.svg";
   const GAME_ICON_FALLBACK = "/img/icons/file.svg";
   /** Owner avatars drawn inline before the row collapses the rest into "+N". */
   const MAX_OWNER_AVATARS = 5;

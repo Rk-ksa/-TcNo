@@ -22,7 +22,7 @@
    */
   const MAX_PINNED_TILES = 4;
 
-  const PROFILE_PLACEHOLDER = "/img/BasicDefault.webp";
+  const PROFILE_PLACEHOLDER = "/img/platform/Steam.svg";
   const LAUNCH_CHECKBOX_ID = "steamGamesLaunchOnSwitch";
 
   let ddOpen = false;

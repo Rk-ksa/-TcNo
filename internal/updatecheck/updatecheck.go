@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -34,9 +35,17 @@ func ParseVersionClock(s string) (time.Time, error) {
 	s = strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(s, "\r", ""), "\n", ""))
 	s = strings.TrimPrefix(s, "v")
 
-	var y, m, d int
-	if n, _ := fmt.Sscanf(s, "%d.%d.%d", &y, &m, &d); n == 3 {
-		return time.Date(y, time.Month(m), d, 0, 0, 0, 0, time.UTC), nil
+	parts := strings.Split(s, ".")
+	if len(parts) == 3 {
+		values := [3]int{}
+		for i, part := range parts {
+			value, err := strconv.Atoi(part)
+			if err != nil || value < 0 {
+				return time.Time{}, fmt.Errorf("updatecheck: invalid semver format: %q", s)
+			}
+			values[i] = value
+		}
+		return time.Date(values[0], time.Month(values[1]), values[2], 0, 0, 0, 0, time.UTC), nil
 	}
 	return time.Time{}, fmt.Errorf("updatecheck: invalid semver format: %q", s)
 }
@@ -48,6 +57,15 @@ func IsUpToDate(current, latest string) bool {
 		return false
 	}
 	return lat.Equal(cur) || cur.After(lat)
+}
+
+// IsUpdateAvailable reports only a strictly newer, parseable release. An
+// invalid version from an API or updater provider must never become an update
+// announcement merely because it cannot be compared.
+func IsUpdateAvailable(current, latest string) bool {
+	cur, errC := ParseVersionClock(current)
+	lat, errL := ParseVersionClock(latest)
+	return errC == nil && errL == nil && lat.After(cur)
 }
 
 func FetchLatestVersion(ctx context.Context, client *http.Client, currentVersion string) (version string, message string, err error) {
@@ -116,7 +134,9 @@ func HandleLaunchAPICheckResult(result LaunchAPICheckResult, exeDir string, curr
 		}
 		return
 	}
-	if IsUpToDate(currentVersion, result.Latest) {
+	// A successful HTTP response is not necessarily a version response. Do not
+	// advertise an update when either side is missing or malformed.
+	if !IsUpdateAvailable(currentVersion, result.Latest) {
 		return
 	}
 	if onUpdateAvailable != nil {
@@ -138,7 +158,7 @@ func RunManualCheck(ctx context.Context, currentVersion string, onUpdateAvailabl
 	if err != nil {
 		return "failed"
 	}
-	if IsUpToDate(currentVersion, latest) {
+	if !IsUpdateAvailable(currentVersion, latest) {
 		return "up-to-date"
 	}
 	if onUpdateAvailable != nil {

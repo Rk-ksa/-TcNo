@@ -19,7 +19,7 @@
   import "../styles/steam-confirmations.scss";
 
   const confirmations = steamConfirmationsWindow;
-  const PROFILE_FALLBACK = "/img/BasicDefault.webp";
+  const PROFILE_FALLBACK = "/img/platform/Steam.svg";
   let now = Date.now();
   let clockTimer: ReturnType<typeof setInterval> | null = null;
   let hoveredKey = "";

@@ -127,6 +127,11 @@ tasks:
     cmds:
       - pnpm run dev --port {{.VITE_PORT}} --strictPort
 
+  wait:frontend:
+    summary: Waits until the Vite development server is accepting requests
+    cmds:
+      - node tools/wait-for-vite.mjs {{.VITE_PORT}}
+
   update:build-assets:
     summary: Updates the build assets
     dir: build

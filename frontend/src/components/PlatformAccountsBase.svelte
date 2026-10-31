@@ -1223,6 +1223,7 @@
 
                   <slot name="account-avatar" {acc} epoch={avatarEpoch[rid] ?? 0} fallback={adapter.profileFallback}>
                     <img
+                      class:account-avatar-placeholder={$streamerMode || adapter.imagePending(acc) || !adapter.imageUrl(acc)?.trim()}
                       src={heldAvatarSrc(heldAvatarKey("list", rid), accountAvatarSrc({
                         streamer: $streamerMode,
                         salt: $avatarSalt,

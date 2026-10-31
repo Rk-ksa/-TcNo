@@ -65,6 +65,8 @@ dev_mode:
       type: blocking
     - cmd: wails3 task common:dev:frontend:nodeps
       type: background
+    - cmd: wails3 task common:wait:frontend
+      type: blocking
     - cmd: wails3 task run
       type: primary
 
