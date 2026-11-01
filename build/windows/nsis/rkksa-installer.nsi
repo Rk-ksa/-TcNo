@@ -18,7 +18,7 @@ Caption "${PRODUCT_NAME} Setup"
   !define OPEN_SOURCE_LICENSES "OPEN_SOURCE_LICENSES.txt"
 !endif
 !ifndef INSTALLER_OUTPUT
-  !define INSTALLER_OUTPUT ".tmp\release-assets\TcNo-Acc-Switcher-Rk-ksa-Setup.exe"
+  !define INSTALLER_OUTPUT ".tmp\release-assets\TcNo-Acc-Switcher-Rk-ksa-Installer.exe"
 !endif
 OutFile "${INSTALLER_OUTPUT}"
 InstallDir "$LOCALAPPDATA\Programs\TcNo Account Switcher - Rk-ksa Edition"

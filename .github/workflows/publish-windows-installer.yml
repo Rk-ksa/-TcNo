@@ -42,9 +42,9 @@ jobs:
           $makensis = 'C:\Program Files (x86)\NSIS\makensis.exe'
           if (-not (Test-Path $makensis)) { throw "NSIS compiler missing: $makensis" }
           $root = $env:GITHUB_WORKSPACE
-          & $makensis /V2 "/DAPP_BINARY=$root\bin\TcNo-Acc-Switcher-Polished.exe" "/DAPP_LICENSE=$root\LICENSE" "/DOPEN_SOURCE_LICENSES=$root\OPEN_SOURCE_LICENSES.txt" "/DINSTALLER_OUTPUT=$root\.tmp\release-assets\TcNo-Acc-Switcher-Rk-ksa-Setup.exe" build/windows/nsis/rkksa-installer.nsi
+          & $makensis /V2 "/DAPP_BINARY=$root\bin\TcNo-Acc-Switcher-Polished.exe" "/DAPP_LICENSE=$root\LICENSE" "/DOPEN_SOURCE_LICENSES=$root\OPEN_SOURCE_LICENSES.txt" "/DINSTALLER_OUTPUT=$root\.tmp\release-assets\TcNo-Acc-Switcher-Rk-ksa-Installer.exe" build/windows/nsis/rkksa-installer.nsi
           if ($LASTEXITCODE -ne 0) { throw "NSIS failed with exit code $LASTEXITCODE" }
-          if (-not (Test-Path '.tmp/release-assets/TcNo-Acc-Switcher-Rk-ksa-Setup.exe')) { throw 'Installer output missing.' }
+          if (-not (Test-Path '.tmp/release-assets/TcNo-Acc-Switcher-Rk-ksa-Installer.exe')) { throw 'Installer output missing.' }
 
       - name: Upload installer to the existing release
         env:
@@ -52,4 +52,4 @@ jobs:
           RELEASE_TAG: ${{ inputs.release_tag }}
         shell: pwsh
         run: |
-          gh release upload $env:RELEASE_TAG '.tmp/release-assets/TcNo-Acc-Switcher-Rk-ksa-Setup.exe' --repo $env:GITHUB_REPOSITORY --clobber
+          gh release upload $env:RELEASE_TAG '.tmp/release-assets/TcNo-Acc-Switcher-Rk-ksa-Installer.exe' --repo $env:GITHUB_REPOSITORY --clobber
