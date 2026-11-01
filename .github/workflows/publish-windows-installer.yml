@@ -29,7 +29,7 @@ jobs:
           New-Item -ItemType Directory -Force bin | Out-Null
           $headers = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = 'application/vnd.github+json'; 'User-Agent' = 'Rk-ksa-installer-builder' }
           $release = Invoke-RestMethod -Uri "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases/tags/${{ inputs.release_tag }}" -Headers $headers
-          $asset = $release.assets | Where-Object { $_.name -match '^TcNo-Acc-Switcher-Rk.*\.exe$' } | Select-Object -First 1
+          $asset = $release.assets | Sort-Object size -Descending | Select-Object -First 1
           if (-not $asset) { throw 'The executable asset is missing from the selected release.' }
           $headers.Accept = 'application/octet-stream'
           Invoke-WebRequest -Uri $asset.url -Headers $headers -OutFile 'bin/TcNo-Acc-Switcher-Polished.exe'
