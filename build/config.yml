@@ -6,7 +6,7 @@ version: '3'
 # This information is used to generate the build assets.
 info:
   companyName: "TroubleChute (Wesley Pyburn)" # The name of the company
-  productName: "TcNo Account Switcher" # The name of the application
+  productName: "TcNo Account Switcher - Unofficial Rk-ksa Edition" # The name of the application
   productIdentifier: "co.tcno.acc-switcher" # The unique product identifier
   description: "A Super-fast account switcher for Steam, Battle.net, Epic Games, Origin, Riot, Ubisoft and many others! " # The application description
   copyright: "(c) 2026, TroubleChute (Wesley Pyburn)" # Copyright text

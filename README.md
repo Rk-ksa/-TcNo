@@ -1,4 +1,6 @@
 
+<h1 align="center">TcNo Account Switcher — Unofficial Rk-ksa Edition</h1>
+
 > **Unofficial modified copy maintained by Rk-ksa.** Based on [TcNo Account Switcher](https://github.com/TCNOco/TcNo-Acc-Switcher); this repository is not affiliated with or endorsed by TCNOco or the platform owners. It retains the upstream GNU GPLv3 license and third-party notices: see [LICENSE](LICENSE) and [OPEN_SOURCE_LICENSES.txt](OPEN_SOURCE_LICENSES.txt).
 
 <p align="center">
@@ -89,7 +91,7 @@ Albion Online, **[Battle.net](https://youtu.be/cvbo_VY05bo?list=PLsSFD61FiOVmAwC
 	</a>
 </p>
     
-1. Download `TcNo Account Switcher Installer.exe`
+1. Download `TcNo-Acc-Switcher-Rk-ksa-Installer.exe`
 2. Run the installer, and the application should launch when done.
 
 Want a portable install? Download and run `TcNo-Acc-Switcher.exe` directly (Do see info and steps on the [portable installs wiki page](https://github.com/TCNOco/TcNo-Acc-Switcher/wiki#portable-eg-for-usb))

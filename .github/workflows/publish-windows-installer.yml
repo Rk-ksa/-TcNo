@@ -1,4 +1,4 @@
-name: Build and publish Windows installer
+name: Build and publish Rk-ksa edition
 
 on:
   workflow_dispatch:
@@ -12,44 +12,79 @@ permissions:
   contents: write
 
 jobs:
-  installer:
+  build-and-publish:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - name: Install NSIS on the temporary runner
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install pnpm
+        run: npm install --global pnpm@11.0.8
+
+      - name: Install NSIS
         shell: pwsh
         run: choco install nsis --yes --no-progress
 
-      - name: Download the published app executable
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Install Wails CLI
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force bin | Out-Null
-          $headers = @{ Authorization = "Bearer $env:GH_TOKEN"; Accept = 'application/vnd.github+json'; 'User-Agent' = 'Rk-ksa-installer-builder' }
-          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases/tags/${{ inputs.release_tag }}" -Headers $headers
-          $asset = $release.assets | Sort-Object size -Descending | Select-Object -First 1
-          if (-not $asset) { throw 'The executable asset is missing from the selected release.' }
-          $headers.Accept = 'application/octet-stream'
-          Invoke-WebRequest -Uri $asset.url -Headers $headers -OutFile 'bin/TcNo-Acc-Switcher-Polished.exe'
+          $goBin = Join-Path $env:USERPROFILE 'go\bin'
+          $env:Path = "$goBin;$env:Path"
+          go install 'github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0-beta.16'
+          Add-Content -Path $env:GITHUB_PATH -Value $goBin
 
-      - name: Build installer
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the unofficial Windows executable
+        shell: pwsh
+        env:
+          GOOS: windows
+          GOARCH: amd64
+          CGO_ENABLED: '0'
+          GOTOOLCHAIN: auto
+        run: |
+          wails3 generate bindings -f '-tags production,devtools' -clean=true -ts
+          Push-Location frontend
+          $env:PRODUCTION = 'true'
+          pnpm run build
+          Pop-Location
+          Push-Location build
+          wails3 generate icons -input appicon.png -macfilename darwin/icons.icns -windowsfilename windows/icon.ico
+          Copy-Item -Force '../other/NSIS/img/icon.ico' 'windows/icon.ico'
+          wails3 generate syso -arch amd64 -icon windows/icon.ico -manifest windows/wails.exe.manifest -info windows/info.json -out ../wails_windows_amd64.syso
+          Pop-Location
+          New-Item -ItemType Directory -Force bin | Out-Null
+          go build -tags production,devtools -trimpath -buildvcs=false -ldflags='-w -s -H windowsgui' -o bin/Rk-ksa-Account-Switcher.exe
+          Remove-Item -Force wails_windows_amd64.syso
+          if (-not (Test-Path 'bin/Rk-ksa-Account-Switcher.exe')) { throw 'Executable build failed.' }
+
+      - name: Build the installer
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force .tmp/release-assets | Out-Null
-          if (-not (Test-Path 'bin/TcNo-Acc-Switcher-Polished.exe')) { throw 'Downloaded app executable is missing.' }
           $makensis = 'C:\Program Files (x86)\NSIS\makensis.exe'
           if (-not (Test-Path $makensis)) { throw "NSIS compiler missing: $makensis" }
           $root = $env:GITHUB_WORKSPACE
-          & $makensis /V2 "/DAPP_BINARY=$root\bin\TcNo-Acc-Switcher-Polished.exe" "/DAPP_LICENSE=$root\LICENSE" "/DOPEN_SOURCE_LICENSES=$root\OPEN_SOURCE_LICENSES.txt" "/DINSTALLER_OUTPUT=$root\.tmp\release-assets\TcNo-Acc-Switcher-Rk-ksa-Installer.exe" build/windows/nsis/rkksa-installer.nsi
+          & $makensis /V2 "/DAPP_BINARY=$root\bin\Rk-ksa-Account-Switcher.exe" "/DAPP_LICENSE=$root\LICENSE" "/DOPEN_SOURCE_LICENSES=$root\OPEN_SOURCE_LICENSES.txt" "/DINSTALLER_OUTPUT=$root\.tmp\release-assets\TcNo-Acc-Switcher-Rk-ksa-Installer.exe" build/windows/nsis/rkksa-installer.nsi
           if ($LASTEXITCODE -ne 0) { throw "NSIS failed with exit code $LASTEXITCODE" }
           if (-not (Test-Path '.tmp/release-assets/TcNo-Acc-Switcher-Rk-ksa-Installer.exe')) { throw 'Installer output missing.' }
 
-      - name: Upload installer to the existing release
+      - name: Upload app and installer to the existing release
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ inputs.release_tag }}
         shell: pwsh
         run: |
-          gh release upload $env:RELEASE_TAG '.tmp/release-assets/TcNo-Acc-Switcher-Rk-ksa-Installer.exe' --repo $env:GITHUB_REPOSITORY --clobber
+          gh release upload $env:RELEASE_TAG 'bin/Rk-ksa-Account-Switcher.exe' '.tmp/release-assets/TcNo-Acc-Switcher-Rk-ksa-Installer.exe' --repo $env:GITHUB_REPOSITORY --clobber
