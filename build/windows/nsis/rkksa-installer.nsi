@@ -8,7 +8,7 @@ Unicode true
 
 Name "${PRODUCT_NAME}"
 Caption "${PRODUCT_NAME} Setup"
-OutFile "..\..\..\.tmp\release-assets\TcNo-Acc-Switcher-Rk-ksa-Setup.exe"
+OutFile ".tmp\release-assets\TcNo-Acc-Switcher-Rk-ksa-Setup.exe"
 InstallDir "$LOCALAPPDATA\Programs\TcNo Account Switcher - Rk-ksa Edition"
 InstallDirRegKey HKCU "Software\Rk-ksa\TcNo Account Switcher" "InstallDir"
 RequestExecutionLevel user
@@ -16,9 +16,9 @@ ShowInstDetails show
 ShowUninstDetails show
 
 !define MUI_ABORTWARNING
-!define MUI_ICON "..\icon.ico"
+!define MUI_ICON "other\NSIS\img\icon.ico"
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "..\..\..\LICENSE"
+!insertmacro MUI_PAGE_LICENSE "LICENSE"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !define MUI_FINISHPAGE_RUN "$INSTDIR\${PRODUCT_EXE}"
@@ -31,8 +31,8 @@ ShowUninstDetails show
 Section "Install"
   SetShellVarContext current
   SetOutPath "$INSTDIR"
-  File /oname=${PRODUCT_EXE} "..\..\..\bin\TcNo-Acc-Switcher-Polished.exe"
-  File "..\..\..\OPEN_SOURCE_LICENSES.txt"
+  File /oname=${PRODUCT_EXE} "bin\TcNo-Acc-Switcher-Polished.exe"
+  File "OPEN_SOURCE_LICENSES.txt"
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
   CreateDirectory "$SMPROGRAMS\TcNo Account Switcher - Rk-ksa Edition"
