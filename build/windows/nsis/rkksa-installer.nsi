@@ -8,7 +8,19 @@ Unicode true
 
 Name "${PRODUCT_NAME}"
 Caption "${PRODUCT_NAME} Setup"
-OutFile ".tmp\release-assets\TcNo-Acc-Switcher-Rk-ksa-Setup.exe"
+!ifndef APP_BINARY
+  !define APP_BINARY "bin\TcNo-Acc-Switcher-Polished.exe"
+!endif
+!ifndef APP_LICENSE
+  !define APP_LICENSE "LICENSE"
+!endif
+!ifndef OPEN_SOURCE_LICENSES
+  !define OPEN_SOURCE_LICENSES "OPEN_SOURCE_LICENSES.txt"
+!endif
+!ifndef INSTALLER_OUTPUT
+  !define INSTALLER_OUTPUT ".tmp\release-assets\TcNo-Acc-Switcher-Rk-ksa-Setup.exe"
+!endif
+OutFile "${INSTALLER_OUTPUT}"
 InstallDir "$LOCALAPPDATA\Programs\TcNo Account Switcher - Rk-ksa Edition"
 InstallDirRegKey HKCU "Software\Rk-ksa\TcNo Account Switcher" "InstallDir"
 RequestExecutionLevel user
@@ -29,9 +41,9 @@ ShowUninstDetails show
 Section "Install"
   SetShellVarContext current
   SetOutPath "$INSTDIR"
-  File /oname=${PRODUCT_EXE} "bin\TcNo-Acc-Switcher-Polished.exe"
-  File "LICENSE"
-  File "OPEN_SOURCE_LICENSES.txt"
+  File /oname=${PRODUCT_EXE} "${APP_BINARY}"
+  File /oname=LICENSE "${APP_LICENSE}"
+  File /oname=OPEN_SOURCE_LICENSES.txt "${OPEN_SOURCE_LICENSES}"
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
   CreateDirectory "$SMPROGRAMS\TcNo Account Switcher - Rk-ksa Edition"
