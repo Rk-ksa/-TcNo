@@ -22,14 +22,11 @@ jobs:
         run: choco install nsis --yes --no-progress
 
       - name: Download the published app executable
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ inputs.release_tag }}
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force bin | Out-Null
-          gh release download $env:RELEASE_TAG --pattern 'TcNo-Acc-Switcher-Rk-ksa.exe' --dir bin --repo $env:GITHUB_REPOSITORY
-          Move-Item 'bin/TcNo-Acc-Switcher-Rk-ksa.exe' 'bin/TcNo-Acc-Switcher-Polished.exe' -Force
+          $assetUrl = "https://github.com/$env:GITHUB_REPOSITORY/releases/download/${{ inputs.release_tag }}/TcNo-Acc-Switcher-Rk-ksa.exe"
+          Invoke-WebRequest -Uri $assetUrl -OutFile 'bin/TcNo-Acc-Switcher-Polished.exe'
 
       - name: Build installer
         shell: pwsh
