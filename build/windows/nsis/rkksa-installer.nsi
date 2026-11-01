@@ -17,7 +17,6 @@ ShowUninstDetails show
 
 !define MUI_ABORTWARNING
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "LICENSE"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !define MUI_FINISHPAGE_RUN "$INSTDIR\${PRODUCT_EXE}"
@@ -31,6 +30,7 @@ Section "Install"
   SetShellVarContext current
   SetOutPath "$INSTDIR"
   File /oname=${PRODUCT_EXE} "bin\TcNo-Acc-Switcher-Polished.exe"
+  File "LICENSE"
   File "OPEN_SOURCE_LICENSES.txt"
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
@@ -49,6 +49,7 @@ SectionEnd
 
 Section "Uninstall"
   Delete "$INSTDIR\${PRODUCT_EXE}"
+  Delete "$INSTDIR\LICENSE"
   Delete "$INSTDIR\OPEN_SOURCE_LICENSES.txt"
   Delete "$INSTDIR\Uninstall.exe"
   RMDir "$INSTDIR"
